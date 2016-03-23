@@ -361,6 +361,7 @@ var makeRandomPizza = function() {
 // returns a DOM element for each pizza
 var pizzaElementGenerator = function(i) {
   var pizzaContainer,             // contains pizza title, image and list of ingredients
+      myPizzaContainer,           // my custom pizza object
       pizzaImageContainer,        // contains the pizza image
       pizzaImage,                 // the pizza image itself
       pizzaDescriptionContainer,  // contains the pizza title and list of ingredients
@@ -382,7 +383,6 @@ var pizzaElementGenerator = function(i) {
   pizzaImage.classList.add("img-responsive");
   pizzaImageContainer.appendChild(pizzaImage);
   pizzaContainer.appendChild(pizzaImageContainer);
-
 
   pizzaDescriptionContainer.classList.add("col-md-6");
 
@@ -469,10 +469,18 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+// optimized pizzas to store 1 fragment of all pizzas created and then append to pizzasdiv when complete
+
+var pizzaFragment = document.createDocumentFragment();
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
-  pizzasDiv.appendChild(pizzaElementGenerator(i));
+  pizzaFragment.appendChild(pizzaElementGenerator(i));
 }
+var pizzasDiv = document.getElementById("randomPizzas");
+pizzasDiv.appendChild(pizzaFragment.cloneNode(true));
+//$("#randomPizzas").append(pizzaList.cloneNode(true));
+
+
+
 
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
@@ -525,7 +533,7 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  for (var i = 0; i < 25; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
